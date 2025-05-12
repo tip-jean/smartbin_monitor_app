@@ -36,7 +36,7 @@
             android:value="2"/>
     </application>
 
-    <!-- Required for Flutter to process text -->
+   
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
