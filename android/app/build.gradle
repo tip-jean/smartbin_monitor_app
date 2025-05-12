@@ -1,11 +1,11 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin" // Correct placement for Flutter plugin
+    id "dev.flutter.flutter-gradle-plugin" 
 }
 
 android {
-    namespace "com.example.smart_monitor" // Correct namespace declaration (no `=` sign)
+    namespace "com.example.smart_monitor" 
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -28,11 +28,11 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug // Ensure this is properly set for release builds
+            signingConfig signingConfigs.debug 
         }
     }
 }
 
 flutter {
-    source "../.." // Ensure the path is correct
+    source "../.." 
 }

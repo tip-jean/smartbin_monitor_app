@@ -20,7 +20,7 @@ class _SmartBinScreenState extends State<SmartBinScreen> {
     checkAndRequestPermissions();
   }
 
-  // Function to check and request Bluetooth permissions
+  
   Future<void> checkAndRequestPermissions() async {
     Map<Permission, PermissionStatus> statuses = await [
       Permission.bluetoothScan,
@@ -39,7 +39,7 @@ class _SmartBinScreenState extends State<SmartBinScreen> {
     }
   }
 
-  // Bluetooth connection and data listening
+
   void connectToDevice() async {
     if (isScanning) return;
 

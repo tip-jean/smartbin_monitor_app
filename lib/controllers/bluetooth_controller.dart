@@ -6,8 +6,7 @@ import 'package:logging/logging.dart';
 final Logger _logger = Logger('BluetoothController');
 
 class BluetoothController {
-  final String deviceName = "SmartBinESP"; // ESP32 Bluetooth name
-
+  final String deviceName = "SmartBinESP"; 
   Future<void> requestPermissions() async {
     _logger.info('Requesting Bluetooth and Location Permissions...');
     await [
@@ -24,7 +23,7 @@ class BluetoothController {
 
     FlutterBluePlus.startScan(timeout: const Duration(seconds: 4));
 
-    // Listen for scan results
+   
     await for (final results in FlutterBluePlus.scanResults) {
       for (final result in results) {
         _logger.info("Found Device: ${result.device.platformName}");
