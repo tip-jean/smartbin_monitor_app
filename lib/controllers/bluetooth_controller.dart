@@ -7,6 +7,9 @@ final Logger _logger = Logger('BluetoothController');
 
 class BluetoothController {
   final String deviceName = "SmartBinESP"; 
+  BluetoothDevice? connectedDevice;
+
+  /// Requests Bluetooth and Location Permissions
   Future<void> requestPermissions() async {
     _logger.info('Requesting Bluetooth and Location Permissions...');
     await [
@@ -16,14 +19,13 @@ class BluetoothController {
     ].request();
   }
 
+  /// Scans for the SmartBinESP device and attempts connection
   Future<BluetoothDevice?> scanAndConnect() async {
-    BluetoothDevice? connectedDevice;
     await requestPermissions();
     _logger.info('Starting Bluetooth Scan...');
 
     FlutterBluePlus.startScan(timeout: const Duration(seconds: 4));
 
-   
     await for (final results in FlutterBluePlus.scanResults) {
       for (final result in results) {
         _logger.info("Found Device: ${result.device.platformName}");
@@ -33,20 +35,22 @@ class BluetoothController {
 
           try {
             await result.device.connect();
-            _logger.info("Connected to SmartBinESP!");
             connectedDevice = result.device;
+            _logger.info("Connected to SmartBinESP!");
+            return connectedDevice;
           } catch (e) {
             _logger.severe("Connection Failed: $e");
+            return null;
           }
-          return connectedDevice;
         }
       }
     }
 
-    _logger.info("Scan complete. SmartBinESP ${connectedDevice != null ? 'connected' : 'not found'}.");
-    return connectedDevice;
+    _logger.info("Scan complete. SmartBinESP not found.");
+    return null;
   }
 
+  /// Listens for bin level updates
   Future<void> listenToBinLevel(
     BluetoothDevice device,
     Function(String) onData,
@@ -69,6 +73,22 @@ class BluetoothController {
     }
   }
 
+  /// Disconnects from the SmartBinESP device
+  Future<void> disconnect() async {
+    if (connectedDevice != null) {
+      try {
+        await connectedDevice!.disconnect();
+        _logger.info("Disconnected from SmartBinESP.");
+        connectedDevice = null;
+      } catch (e) {
+        _logger.severe("Failed to disconnect: $e");
+      }
+    } else {
+      _logger.info("No device is currently connected.");
+    }
+  }
+
+  /// Checks and requests location services before scanning
   Future<void> checkAndRequestLocationServices() async {
     location.Location locationService = location.Location();
     bool serviceEnabled = await locationService.serviceEnabled();
